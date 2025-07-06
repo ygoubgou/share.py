@@ -1,0 +1,36 @@
+wave
+female
+age
+iv009_mod_1. A big city
+iv009_mod_2. The suburbs or outskirts of a big city
+iv009_mod_3. A large town
+iv009_mod_5. A rural area or village
+eduyears_mod
+hhsize
+ch001_
+sp002_mod
+sphus_1. Excellent
+sphus_2. Very good
+sphus_4. Fair
+sphus_5. Poor
+chronic_mod
+eurod
+hc002_mod
+hc012_
+maxgrip
+bmi
+mobilityind
+smoking
+ep005__1. retired
+ep005__3. unemployed
+ep005__4. permanently sick or disabled
+ep005__97. other
+thinc_m
+changement_statut
+age_2
+eduyears_mod_2
+hhsize_2
+ch001_2
+bmi_2
+hc002_mod_2
+thinc_m_2

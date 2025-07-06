@@ -1,0 +1,11 @@
+streamlit
+scikit-learn
+pyreadstat
+pyreadr
+pyreader
+polars
+plotly
+pandas
+seaborn
+matplotlib
+statsmodels
