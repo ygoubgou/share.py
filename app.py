@@ -15,7 +15,7 @@ st.set_page_config(
 with st.sidebar:
     st.image("graphiques/logo.png", width=300)  
 
-st.title("PROJET M2 – Discrimination sur le marché du travail ")
+st.title("PROJET M2 IDEE – Discrimination sur le marché du travail ")
 st.warning("Professeur : CHRISTOPHE DANIEL")
 with st.container():
     st.markdown("## Bienvenue dans l'application d'estimation du bien-être")

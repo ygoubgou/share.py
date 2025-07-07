@@ -3,7 +3,7 @@ from objets import UserInput
 
 def get_forms() -> UserInput:
     with st.sidebar:
-        st.header("🧍 Informations personnelles")
+        st.header("🧍 Informations personnelles du répondant")
         female = st.selectbox("Sexe", ["--", "Homme", "Femme"])
         female = 1 if female == "Femme" else 0
 
