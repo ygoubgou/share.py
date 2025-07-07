@@ -1,12 +1,12 @@
 wave (Int8) 
 female (Int64) 
 age (Float64) 
-iv009_mod (String) : 1. A big city,4. A small town,3. A large town,2. The suburbs or outskirts of a big city,5. A rural area or village
+iv009_mod (String) : 4. A small town,5. A rural area or village,3. A large town,2. The suburbs or outskirts of a big city,1. A big city
 eduyears_mod (Float64) 
 hhsize (Int64) 
 ch001_ (Int64) 
 sp002_mod (Int64) 
-sphus (String) : 3. Good,5. Poor,4. Fair,1. Excellent,2. Very good
+sphus (String) : 4. Fair,2. Very good,1. Excellent,3. Good,5. Poor
 chronic_mod (Int64) 
 casp (Int64) 
 eurod (Float64) 
@@ -16,7 +16,7 @@ maxgrip (Int64)
 bmi (Float64) 
 mobilityind (Int64) 
 smoking (Int64) 
-ep005_ (String) : 5. homemaker,1. retired,97. other,3. unemployed,4. permanently sick or disabled
+ep005_ (String) : 4. permanently sick or disabled,5. homemaker,3. unemployed,97. other,1. retired
 thinc_m (Float32) 
 changement_statut (Int64) 
 age_2 (Float64) 
