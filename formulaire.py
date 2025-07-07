@@ -65,7 +65,6 @@ def get_forms() -> UserInput:
         thinc_m_2 = thinc_m ** 2
 
         changement_statut = int(st.selectbox("A-t-il/elle perdu son conjoint ?", [0, 1]))
-        wave = int(st.selectbox("Vague d'enquête", [5, 9]))
 
         return UserInput(
             female, age, age_2,
@@ -83,5 +82,5 @@ def get_forms() -> UserInput:
             eurod,
             sp002_mod,
             changement_statut,
-            wave
+          
         )

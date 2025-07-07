@@ -14,13 +14,24 @@ modelPaths = rootPath / "models"
         model = pickle.load(f)
         return model"""
 
-def get_boosting_model() -> GradientBoostingRegressor:
-    with open(modelPaths / 'GradientB_Model.pkl', "rb") as f:
+def get_boosting_model_av() -> GradientBoostingRegressor:
+    with open(modelPaths / 'GradientB_Model_av.pkl', "rb") as f:
         model = pickle.load(f)
         return model
     
-def get_knn_model() -> KNeighborsRegressor:
-    with open(modelPaths / 'KNN_Model.pkl', "rb") as f:
+def get_knn_model_av() -> KNeighborsRegressor:
+    with open(modelPaths / 'KNN_Model_av.pkl', "rb") as f:
+        model = pickle.load(f)
+        return model
+    
+
+def get_boosting_model_ap() -> GradientBoostingRegressor:
+    with open(modelPaths / 'GradientB_Model_ap.pkl', "rb") as f:
+        model = pickle.load(f)
+        return model
+    
+def get_knn_model_ap() -> KNeighborsRegressor:
+    with open(modelPaths / 'KNN_Model_ap.pkl', "rb") as f:
         model = pickle.load(f)
         return model
     

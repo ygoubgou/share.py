@@ -8,52 +8,96 @@ from pathlib import Path
 # Configuration de la page
 st.set_page_config(
     page_title="Estimation du score de bien-être après veuvage",
-    page_icon="💡",
+    page_icon="💼",
     layout="wide"
 )
 
-st.title("PROJET M2 – Discrimination sur le marché du travail 💼")
-st.markdown("## Estimation du score de bien-être à l’aide de modèles prédictifs")
+with st.sidebar:
+    st.image("graphiques/logo.png", width=300)  
 
-# Choix du modèle
-MODEL_NAMES = {
-    "Gradient Boosting": models.get_boosting_model,
-    "KNN": models.get_knn_model,
-}
+st.title("PROJET M2 – Discrimination sur le marché du travail ")
+st.warning("Professeur : CHRISTOPHE DANIEL")
+with st.container():
+    st.markdown("## Bienvenue dans l'application d'estimation du bien-être")
 
-selected_model_name = st.selectbox("🔍 Choisissez un modèle de prédiction", ["--"] + list(MODEL_NAMES.keys()))
-user_input = get_forms()
+    st.markdown(
+        """
+        Cette application vous permet d’estimer le **score de bien-être d’un individu** 
+        sur le marché du travail **avant et après traitement**, en utilisant des modèles de machine learning.
 
-if selected_model_name != "--":
-    model = MODEL_NAMES[selected_model_name]()
-    mlinput = np.array([*asdict(user_input.convert_to_mlinput()).values()]).reshape(1, -1)
-    prediction = model.predict(mlinput)
+        ---
+        ### 🧭 Mode d'emploi :
+        -  **Renseignez** les informations de l’individu via le formulaire à gauche.
+        -  **Choisissez** un modèle prédictif *avant traitement* et un autre *après traitement*.
+        -  **Comparez automatiquement** les deux scores estimés.
+        -  **Visualisez** les résultats avec des graphiques interactifs.
 
-    st.success(
-        f"✅ Le modèle **{selected_model_name}** prédit un score de bien-être de **{prediction[0]:,.0f} points**."
+        ---
+        🔍 *L’objectif est d’évaluer l'impact du veuvage sur le bien-être subjectif estimé.*
+        """
     )
 
-    # Interprétation textuelle enrichie
-    st.markdown("---")
-st.subheader("Remarques")
 
-st.markdown(
-    """
-    <div style='font-size:16px; line-height:1.6'>
-    Le modèle de <b>voisins les plus proches</b> semble relativement <span style="color:red"><b>insensible à la variable de veuvage</b></span>.
-    <br><br>
-    En revanche, il est influencé par :
-    <ul>
-        <li>👵 <b>L'âge</b></li>
-        <li>👶 <b>Le nombre d'enfants</b></li>
-        <li>💪 <b>La force de préhension</b></li>
-        <li>⚖️ <b>L'indice de masse corporelle (IMC)</b></li>
-    </ul>
-    Cela suggère que <b>d'autres facteurs personnels ou biologiques</b> sont plus déterminants dans le score de bien-être.
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+
+
+# Récupération des données utilisateur une seule fois
+user_input = get_forms()
+mlinput = np.array([*asdict(user_input.convert_to_mlinput()).values()]).reshape(1, -1)
+
+# Colonnes pour afficher les prédictions
+col1, col2 = st.columns(2)
+
+# Bloc AVANT traitement
+with col1:
+    st.info("💡 Estimation du score de bien-être AVANT traitement")
+    
+    MODEL_NAMES = {
+        "Gradient Boosting": models.get_boosting_model_av,
+        "KNN": models.get_knn_model_av,
+    }
+
+    selected_model_name = st.selectbox(
+        "🔍 Choisissez un modèle", 
+        ["--"] + list(MODEL_NAMES.keys()), 
+        key="avant"
+    )
+
+    prediction_av = None
+    if selected_model_name != "--":
+        model = MODEL_NAMES[selected_model_name]()
+        prediction_av = model.predict(mlinput)[0]
+        st.success(
+            f"✅ Modèle **{selected_model_name}** : **{prediction_av:,.0f} points**"
+        )
+
+# Bloc APRÈS traitement
+with col2:
+    st.info("💡 Estimation du score de bien-être APRÈS traitement")
+    
+    MODEL_NAMES_AP = {
+        "Gradient Boosting": models.get_boosting_model_ap,
+        "KNN": models.get_knn_model_ap,
+    }
+
+    selected_model_name_ap = st.selectbox(
+        "🔍 Choisissez un modèle", 
+        ["--"] + list(MODEL_NAMES_AP.keys()), 
+        key="apres"
+    )
+
+    prediction_ap = None
+    if selected_model_name_ap != "--":
+        model = MODEL_NAMES_AP[selected_model_name_ap]()
+        prediction_ap = model.predict(mlinput)[0]
+        st.success(
+            f"✅ Modèle **{selected_model_name_ap}** : **{prediction_ap:,.0f} points**"
+        )
+
+# Comparaison des prédictions
+if prediction_av is not None and prediction_ap is not None:
+    st.markdown("### 🔍 Comparaison des scores prédits")
+    diff = prediction_ap - prediction_av
+    st.info(f"📉 Différence (Après - Avant) : **{diff:+.0f} points**")
 
 # Espace pour afficher les graphiques HTML interactifs
 st.markdown("## 📈 Explorer les résultats visuellement")

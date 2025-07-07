@@ -31,7 +31,6 @@ class UserInput:
     eurod: float
     sp002_mod: int
     changement_statut: int
-    wave: int
 
     def convert_to_mlinput(self):
         def safe_startswith(s: str, prefix: str) -> bool:
@@ -79,7 +78,6 @@ class UserInput:
             eurod=self.eurod,
             sp002_mod=self.sp002_mod,
             changement_statut=bool(self.changement_statut),
-            wave=self.wave
         )
 
 @dataclass
@@ -125,4 +123,3 @@ class MLInput:
     eurod: float
     sp002_mod: int
     changement_statut: bool
-    wave: int

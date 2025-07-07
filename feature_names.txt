@@ -1,4 +1,3 @@
-wave
 female
 age
 iv009_mod_1. A big city
@@ -21,9 +20,9 @@ maxgrip
 bmi
 mobilityind
 smoking
-ep005__1. retired
 ep005__3. unemployed
 ep005__4. permanently sick or disabled
+ep005__5. homemaker
 ep005__97. other
 thinc_m
 changement_statut
