@@ -23,7 +23,7 @@ with st.container():
     st.markdown(
         """
         Cette application vous permet d’estimer le **score de bien-être d’un individu** 
-        sur le marché du travail **avant et après traitement**, en utilisant des modèles de machine learning.
+        agé de plus de 50 ans **avant et après la survenue du veuvage**, en utilisant des modèles de machine learning.
 
         ---
         ### 🧭 Mode d'emploi :
