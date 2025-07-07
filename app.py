@@ -7,119 +7,99 @@ from pathlib import Path
 
 # Configuration de la page
 st.set_page_config(
-    page_title="Estimation du score de bien-être après veuvage",
+    page_title="Estimation du bien-être après veuvage",
     page_icon="💼",
     layout="wide"
 )
 
+# === SIDEBAR ===
 with st.sidebar:
-    st.image("graphiques/logo.png", width=300)  
+    st.image("graphiques/logo.png", width=250)
+    st.markdown("""
+        ## Paramètres
+        Renseignez les informations dans le formulaire
+        puis sélectionnez les modèles pour l'estimation.
+    """)
 
-st.title("PROJET M2 IDEE – Discrimination sur le marché du travail ")
-st.warning("Professeur : CHRISTOPHE DANIEL")
-with st.container():
-    st.markdown("## Bienvenue dans l'application d'estimation du bien-être")
+# === TITRE PRINCIPAL ===
+st.markdown("""
+    <h1 style='text-align: center; color: #0B5345;'>
+        🧠 Estimation du bien-être après veuvage
+    </h1>
+    <h4 style='text-align: center; color: #1F618D;'>
+        Projet M2 IDEE · Discrimination sur le marché du travail
+    </h4>
+""", unsafe_allow_html=True)
 
-    st.markdown(
-        """
-        Cette application vous permet d’estimer le **score de bien-être d’un individu** 
-        agé de plus de 50 ans **avant et après la survenue du veuvage**, en utilisant des modèles de machine learning.
+st.info("Professeur référent : CHRISTOPHE DANIEL")
 
-        ---
-        ### 🧭 Mode d'emploi :
-        -  **Renseignez** les informations de l’individu via le formulaire à gauche.
-        -  **Choisissez** un modèle prédictif *avant traitement* et un autre *après traitement*.
-        -  **Comparez automatiquement** les deux scores estimés.
-        -  **Visualisez** les résultats avec des graphiques interactifs.
+with st.expander("ℹ️ À propos de l'application", expanded=True):
+    st.markdown("""
+    Cette application estime le **score de bien-être subjectif** d’un individu de plus de 50 ans **avant et après un veuvage**.
 
-        ---
-        🔍 *L’objectif est d’évaluer l'impact du veuvage sur le bien-être subjectif estimé.*
-        """
-    )
+    ### Mode d'emploi :
+    - Renseignez les caractéristiques de l’individu à gauche.
+    - Sélectionnez deux modèles (avant et après).
+    - Comparez les résultats et visualisez les impacts.
+    """)
 
-
-
-
-# Récupération des données utilisateur une seule fois
+# === FORMULAIRE UTILISATEUR ===
 user_input = get_forms()
 mlinput = np.array([*asdict(user_input.convert_to_mlinput()).values()]).reshape(1, -1)
 
-# Colonnes pour afficher les prédictions
+# === PRÉDICTIONS ===
+st.markdown("## 🔮 Estimations du score de bien-être")
 col1, col2 = st.columns(2)
 
-# Bloc AVANT traitement
 with col1:
-    st.info("💡 Estimation du score de bien-être AVANT traitement")
-    
-    MODEL_NAMES = {
-        "Gradient Boosting": models.get_boosting_model_av,
-        "KNN": models.get_knn_model_av,
-    }
-
-    selected_model_name = st.selectbox(
-        "🔍 Choisissez un modèle", 
-        ["--"] + list(MODEL_NAMES.keys()), 
-        key="avant"
-    )
-
+    st.subheader("Avant traitement")
+    model_name_av = st.selectbox("Choisissez un modèle (avant)", ["--", "Gradient Boosting", "KNN"], key="avant")
     prediction_av = None
-    if selected_model_name != "--":
-        model = MODEL_NAMES[selected_model_name]()
+    if model_name_av != "--":
+        model = models.get_boosting_model_av() if model_name_av == "Gradient Boosting" else models.get_knn_model_av()
         prediction_av = model.predict(mlinput)[0]
-        st.success(
-            f"✅ Modèle **{selected_model_name}** : **{prediction_av:,.0f} points**"
-        )
+        st.metric("Score prédit AVANT", f"{prediction_av:.0f} points")
 
-# Bloc APRÈS traitement
 with col2:
-    st.info("💡 Estimation du score de bien-être APRÈS traitement")
-    
-    MODEL_NAMES_AP = {
-        "Gradient Boosting": models.get_boosting_model_ap,
-        "KNN": models.get_knn_model_ap,
-    }
-
-    selected_model_name_ap = st.selectbox(
-        "🔍 Choisissez un modèle", 
-        ["--"] + list(MODEL_NAMES_AP.keys()), 
-        key="apres"
-    )
-
+    st.subheader("Après traitement")
+    model_name_ap = st.selectbox("Choisissez un modèle (après)", ["--", "Gradient Boosting", "KNN"], key="apres")
     prediction_ap = None
-    if selected_model_name_ap != "--":
-        model = MODEL_NAMES_AP[selected_model_name_ap]()
+    if model_name_ap != "--":
+        model = models.get_boosting_model_ap() if model_name_ap == "Gradient Boosting" else models.get_knn_model_ap()
         prediction_ap = model.predict(mlinput)[0]
-        st.success(
-            f"✅ Modèle **{selected_model_name_ap}** : **{prediction_ap:,.0f} points**"
-        )
+        st.metric("Score prédit APRÈS", f"{prediction_ap:.0f} points")
 
-# Comparaison des prédictions
+# === COMPARAISON ===
 if prediction_av is not None and prediction_ap is not None:
-    st.markdown("### 🔍 Comparaison des scores prédits")
     diff = prediction_ap - prediction_av
-    st.info(f"📉 Différence (Après - Avant) : **{diff:+.0f} points**")
+    st.markdown("### ⚖️ Comparaison des scores")
+    delta_color = "normal" if diff == 0 else "inverse" if diff < 0 else "off"
+    st.metric("Différence (Après - Avant)", f"{diff:+.0f} points", delta_color=delta_color)
 
-# Espace pour afficher les graphiques HTML interactifs
-st.markdown("## 📈 Explorer les résultats visuellement")
+# === GRAPHIQUES INTERACTIFS ===
+st.markdown("## 📊 Visualisation interactive")
+vis1, vis2 = st.columns(2)
 
-col1, col2 = st.columns(2)
-
-with col1:
-    if st.button("🔍 Visualiser les appariements"):
+with vis1:
+    if st.button("Afficher les appariements", use_container_width=True):
         html_path = Path("graphiques/appariement.html")
         if html_path.exists():
             st.components.v1.html(html_path.read_text(encoding='utf-8'), height=600)
         else:
-            st.warning("⚠️ Graphique non trouvé : `graphiques/appariement.html`")
+            st.error("Fichier 'appariement.html' non trouvé")
 
-with col2:
-    if st.button("📊 Afficher la matrice de corrélation"):
+with vis2:
+    if st.button("Afficher la corrélation", use_container_width=True):
         html_path = Path("graphiques/correlation_interactive.html")
         if html_path.exists():
             st.components.v1.html(html_path.read_text(encoding='utf-8'), height=600)
         else:
-            st.warning("⚠️ Graphique non trouvé : `graphiques/correlation_interractive.html`")
+            st.error("Fichier 'correlation_interactive.html' non trouvé")
 
-# Footer
-st.markdown("---")
-st.caption("Développé dans le cadre du projet Discrimination et marché du travail · 2025")
+# === FOOTER ===
+st.markdown("""
+    ---
+    <div style='text-align: center;'>
+        <small>Développé dans le cadre du projet M2 IDEE · 2025</small>
+    </div>
+""", unsafe_allow_html=True)
